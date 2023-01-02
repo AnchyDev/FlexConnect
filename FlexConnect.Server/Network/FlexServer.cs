@@ -46,16 +46,19 @@ namespace FlexConnect.Server.Network
 
         private async Task HandleClientAsync(TcpClient tcpClient)
         {
-            byte[] payload = Guid.NewGuid().ToByteArray();
+            // Handshake
+            {
+                byte[] payload = Guid.NewGuid().ToByteArray();
 
-            var packet = new PacketBuilder(OpCode.Auth)
-                .Append<byte[]>(payload)
-                .Build();
+                var packet = new PacketBuilder(OpCode.Auth)
+                    .Append<byte[]>(payload)
+                    .Build();
 
-            var netStream = tcpClient.GetStream();
+                var netStream = tcpClient.GetStream();
 
-            await netStream.WriteAsync(packet);
-            await netStream.FlushAsync();
+                await netStream.WriteAsync(packet.Payload);
+                await netStream.FlushAsync();
+            }
         }
     }
 }

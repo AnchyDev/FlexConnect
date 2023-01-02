@@ -50,13 +50,13 @@ namespace FlexConnect.Shared.Network
             return this;
         }
 
-        public byte[] Build()
+        public Packet Build()
         {
             _bWriterHead.Write(_mStreamPayload.Length);
             _bWriterHead.Write(_mStreamPayload.ToArray());
             _bWriterHead.Flush();
 
-            return _mStreamHead.ToArray();
+            return new Packet(_opCode, _mStreamHead.ToArray());
         }
     }
 }
