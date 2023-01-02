@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FlexConnect.Shared.Network;
+using System.Net;
 using System.Net.Sockets;
 
 namespace FlexConnect.Server.Network
@@ -45,7 +46,16 @@ namespace FlexConnect.Server.Network
 
         private async Task HandleClientAsync(TcpClient tcpClient)
         {
-            Console.WriteLine($"{tcpClient.Client.RemoteEndPoint} connected.");
+            byte[] payload = Guid.NewGuid().ToByteArray();
+
+            var packet = new PacketBuilder(OpCode.Auth)
+                .Append<byte[]>(payload)
+                .Build();
+
+            var netStream = tcpClient.GetStream();
+
+            await netStream.WriteAsync(packet);
+            await netStream.FlushAsync();
         }
     }
 }
