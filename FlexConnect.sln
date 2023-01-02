@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexConnect.Server", "FlexConnect.Server\FlexConnect.Server.csproj", "{20C44C03-E56A-4DC8-9784-70D1D1812020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexConnect.Server.TestServer", "FlexConnect.Server.TestServer\FlexConnect.Server.TestServer.csproj", "{704B82D9-00B6-4173-A120-C09260A00FCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexConnect.Client", "FlexConnect.Client\FlexConnect.Client.csproj", "{0A091DBD-F2FE-4EB0-8618-93E72D4051DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexConnect.Client.TestClient", "FlexConnect.Client.TestClient\FlexConnect.Client.TestClient.csproj", "{2400F402-75CB-4407-AD62-F9E9B62C719F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexConnect.Shared", "FlexConnect.Shared\FlexConnect.Shared.csproj", "{42263C8C-24A7-4A3D-95FF-A52506C87C0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20C44C03-E56A-4DC8-9784-70D1D1812020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C44C03-E56A-4DC8-9784-70D1D1812020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C44C03-E56A-4DC8-9784-70D1D1812020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C44C03-E56A-4DC8-9784-70D1D1812020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{704B82D9-00B6-4173-A120-C09260A00FCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704B82D9-00B6-4173-A120-C09260A00FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704B82D9-00B6-4173-A120-C09260A00FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704B82D9-00B6-4173-A120-C09260A00FCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A091DBD-F2FE-4EB0-8618-93E72D4051DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A091DBD-F2FE-4EB0-8618-93E72D4051DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A091DBD-F2FE-4EB0-8618-93E72D4051DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A091DBD-F2FE-4EB0-8618-93E72D4051DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2400F402-75CB-4407-AD62-F9E9B62C719F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2400F402-75CB-4407-AD62-F9E9B62C719F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2400F402-75CB-4407-AD62-F9E9B62C719F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2400F402-75CB-4407-AD62-F9E9B62C719F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42263C8C-24A7-4A3D-95FF-A52506C87C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42263C8C-24A7-4A3D-95FF-A52506C87C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42263C8C-24A7-4A3D-95FF-A52506C87C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42263C8C-24A7-4A3D-95FF-A52506C87C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {43EBF4E8-B1D4-4221-B7F1-4C99C0BA4EA4}
+	EndGlobalSection
+EndGlobal
