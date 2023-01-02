@@ -1,10 +1,14 @@
-﻿namespace FlexConnect.Server.TestServer
+﻿using FlexConnect.Server.Network;
+using System.Net;
+
+namespace FlexConnect.Server.TestServer
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var server = new FlexServer(IPAddress.Any, 4411);
+            await server.StartAsync();
         }
     }
 }

@@ -1,10 +1,14 @@
-﻿namespace FlexConnect.Client.TestClient
+﻿using FlexConnect.Client.Network;
+using System.Net;
+
+namespace FlexConnect.Client.TestClient
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var client = new FlexClient(IPAddress.Parse("127.0.0.1"), 4411);
+            await client.ConnectAsync();
         }
     }
 }
