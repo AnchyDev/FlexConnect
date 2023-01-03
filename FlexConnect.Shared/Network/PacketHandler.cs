@@ -14,7 +14,7 @@ namespace FlexConnect.Shared.Network
             switch (readType.Name)
             {
                 case "Int32":
-                    buffer = new byte[4];
+                    buffer = new byte[sizeof(Int32)];
                     await netStream.ReadAsync(buffer, 0, sizeof(Int32));
                     return buffer;
 
