@@ -1,4 +1,5 @@
-﻿using FlexConnect.Shared.Network;
+﻿using FlexConnect.Shared.Logging;
+using FlexConnect.Shared.Network;
 using System.Net;
 using System.Net.Sockets;
 
@@ -11,12 +12,16 @@ namespace FlexConnect.Server.Network
         private CancellationTokenSource _cancelTokenSource;
         private CancellationToken _cancelToken;
 
+        private ILogger _logger;
+
         public FlexServer(IPAddress ipAddress, int port)
         {
             _listener = new TcpListener(ipAddress, port);
 
             _cancelTokenSource = new CancellationTokenSource();
             _cancelToken = _cancelTokenSource.Token;
+
+            _logger = new LoggerConsole();
         }
 
         public async Task StartAsync()
@@ -46,24 +51,31 @@ namespace FlexConnect.Server.Network
 
         private async Task HandleClientAsync(TcpClient tcpClient)
         {
-            // Handshake
+            try
             {
-                byte[] payload = Guid.NewGuid().ToByteArray();
-
-                var packet = new PacketBuilder(OpCode.Auth)
-                    .Append<byte[]>(payload)
-                    .Build();
-
-                await PacketHandler.SendAsync(tcpClient.GetStream(), packet);
-
-                var opCodeBytes = await PacketHandler.ReadAsync<int>(tcpClient.GetStream());
-                var opCode = (OpCode)BitConverter.ToInt32(opCodeBytes, 0);
-
-                if(opCode != OpCode.Auth)
+                // Handshake
                 {
-                    await DisconnectUser(tcpClient);
-                    return;
+                    byte[] payload = Guid.NewGuid().ToByteArray();
+
+                    var packet = new PacketBuilder(OpCode.Auth)
+                        .Append<byte[]>(payload)
+                        .Build();
+
+                    await PacketHandler.SendAsync(tcpClient.GetStream(), packet);
+
+                    var opCodeBytes = await PacketHandler.ReadAsync<int>(tcpClient.GetStream());
+                    var opCode = (OpCode)BitConverter.ToInt32(opCodeBytes, 0);
+
+                    if (opCode != OpCode.Auth)
+                    {
+                        await DisconnectUser(tcpClient);
+                        return;
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                await _logger.LogAsync(LogLevel.Error, $"{ex}");
             }
         }
 
