@@ -40,11 +40,18 @@ namespace FlexConnect.Server.Network
         {
             while (!_cancelToken.IsCancellationRequested)
             {
-                var tcpClient = await _listener.AcceptTcpClientAsync();
-
-                if (tcpClient != null)
+                try
                 {
-                    await HandleClientAsync(tcpClient).ConfigureAwait(false);
+                    var tcpClient = await _listener.AcceptTcpClientAsync();
+
+                    if (tcpClient != null)
+                    {
+                        await HandleClientAsync(tcpClient).ConfigureAwait(false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await _logger.LogAsync(LogLevel.Error, $"{ex}");
                 }
             }
         }
