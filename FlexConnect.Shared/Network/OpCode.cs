@@ -2,6 +2,7 @@
 {
     public enum OpCode : int
     {
-        Auth = 1
+        Auth = 1,
+        ReqList = 2
     }
 }

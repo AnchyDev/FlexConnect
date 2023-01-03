@@ -1,8 +1,12 @@
 ﻿using FlexConnect.Shared.Logging;
+using FlexConnect.Shared.MasterList;
 using FlexConnect.Shared.Network;
 
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Text.Json;
 
 namespace FlexConnect.Server.Network
 {
@@ -66,10 +70,40 @@ namespace FlexConnect.Server.Network
                     await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' failed handshake. Disconnecting.");
                     await DisconnectUser(tcpClient);
                 }
+
+                await HandlePacketsAsync(tcpClient);
             }
             catch(Exception ex)
             {
                 await _logger.LogAsync(LogLevel.Error, $"{ex}");
+            }
+        }
+
+        private async Task HandlePacketsAsync(TcpClient tcpClient)
+        {
+            var opCode = await PacketHandler.ReadOpCodeAsync(tcpClient.GetStream());
+
+            switch(opCode)
+            {
+                case OpCode.ReqList:
+                    var masterList = new List<ServerInfo>();
+                    masterList.Add(new ServerInfo()
+                    {
+                        Name = "Test Server",
+                        Description = "This is a test server.",
+                        Realmlist = "logon.testserver.net"
+                    });
+
+                    string serializedList = JsonSerializer.Serialize(masterList);
+                    byte[] listPayload = Encoding.UTF8.GetBytes(serializedList);
+
+                    var packet = new PacketBuilder(OpCode.ReqList)
+                        .Append(listPayload.Length)
+                        .Append(listPayload)
+                        .Build();
+
+                    await PacketHandler.SendAsync(tcpClient.GetStream(), packet);
+                    break;
             }
         }
 
