@@ -22,7 +22,6 @@ namespace FlexConnect.Shared.Network
                     buffer = new byte[length];
                     await netStream.ReadAsync(buffer, 0, length);
                     return buffer;
-                    break;
             }
 
             throw new NotImplementedException($"The type '{typeof(T)}' is not a valid type for ReadAsync<T>.");

@@ -67,6 +67,7 @@ namespace FlexConnect.Server.Network
                     byte[] payload = Guid.NewGuid().ToByteArray();
 
                     var packet = new PacketBuilder(OpCode.Auth)
+                        .Append<int>(payload.Length)
                         .Append<byte[]>(payload)
                         .Build();
 
@@ -85,8 +86,7 @@ namespace FlexConnect.Server.Network
                     var len = BitConverter.ToInt32(lenBytes);
                     var responsePayload = await PacketHandler.ReadAsync<byte[]>(tcpClient.GetStream(), len);
 
-                    // FIXME: We are receing the whole packet as payload
-                    if(payload != responsePayload)
+                    if(new Guid(payload).CompareTo(new Guid(responsePayload)) != 0)
                     {
                         await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' failed to match handshake guid. Disconnecting.");
                         await DisconnectUser(tcpClient);

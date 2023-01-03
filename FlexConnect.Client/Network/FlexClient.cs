@@ -45,6 +45,7 @@ namespace FlexConnect.Client.Network
                     var handshakeBytes = await PacketHandler.ReadAsync<byte[]>(_client.GetStream(), len);
 
                     var packet = new PacketBuilder(OpCode.Auth)
+                        .Append(handshakeBytes.Length)
                         .Append(handshakeBytes)
                         .Build();
 

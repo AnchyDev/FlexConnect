@@ -4,8 +4,6 @@
     {
         private OpCode _opCode;
 
-        private MemoryStream _mStreamHead;
-        private BinaryWriter _bWriterHead;
         private MemoryStream _mStreamPayload;
         private BinaryWriter _bWriterPayload;
 
@@ -13,12 +11,10 @@
         {
             _opCode = opCode;
 
-            _mStreamHead = new MemoryStream();
-            _bWriterHead = new BinaryWriter(_mStreamHead);
             _mStreamPayload = new MemoryStream();
             _bWriterPayload = new BinaryWriter(_mStreamPayload);
- 
-            _bWriterHead.Write(BitConverter.GetBytes((int)_opCode));
+
+            _bWriterPayload.Write(BitConverter.GetBytes((int)_opCode));
         }
 
         public PacketBuilder Append<T>(T data)
@@ -45,11 +41,7 @@
 
         public Packet Build()
         {
-            _bWriterHead.Write(_mStreamPayload.Length);
-            _bWriterHead.Write(_mStreamPayload.ToArray());
-            _bWriterHead.Flush();
-
-            return new Packet(_opCode, _mStreamHead.ToArray());
+            return new Packet(_opCode, _mStreamPayload.ToArray());
         }
     }
 }
