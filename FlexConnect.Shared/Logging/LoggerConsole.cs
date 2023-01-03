@@ -10,7 +10,10 @@ namespace FlexConnect.Shared.Logging
     {
         public async Task LogAsync(LogLevel logLevel, string message)
         {
-            Console.WriteLine($"[{logLevel}] {message}");
+            await Task.Run(() =>
+            {
+                Console.WriteLine($"[{logLevel}] {message}");
+            });
         }
     }
 }
