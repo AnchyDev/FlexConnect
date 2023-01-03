@@ -54,11 +54,22 @@ namespace FlexConnect.Server.Network
                     .Append<byte[]>(payload)
                     .Build();
 
-                var netStream = tcpClient.GetStream();
+                await PacketHandler.SendAsync(tcpClient.GetStream(), packet);
 
-                await netStream.WriteAsync(packet.Payload);
-                await netStream.FlushAsync();
+                var opCodeBytes = await PacketHandler.ReadAsync<int>(tcpClient.GetStream());
+                var opCode = (OpCode)BitConverter.ToInt32(opCodeBytes, 0);
+
+                if(opCode != OpCode.Auth)
+                {
+                    await DisconnectUser(tcpClient);
+                    return;
+                }
             }
+        }
+
+        private async Task DisconnectUser(TcpClient tcpClient)
+        {
+            await Task.Run(tcpClient.Close);
         }
     }
 }

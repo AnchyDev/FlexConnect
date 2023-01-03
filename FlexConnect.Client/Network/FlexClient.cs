@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FlexConnect.Shared.Network;
+using System.Net;
 using System.Net.Sockets;
 
 namespace FlexConnect.Client.Network
@@ -19,6 +20,12 @@ namespace FlexConnect.Client.Network
         public async Task ConnectAsync()
         {
             await _client.ConnectAsync(_ipAddress, _port);
+            
+            while(true)
+            {
+                var intBytes = await PacketHandler.ReadAsync<int>(_client.GetStream());
+                Console.WriteLine("Found " + (OpCode)BitConverter.ToInt32(intBytes));
+            }
         }
     }
 }
