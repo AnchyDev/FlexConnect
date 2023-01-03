@@ -29,27 +29,9 @@ namespace FlexConnect.Client.Network
             {
                 await _client.ConnectAsync(_ipAddress, _port);
 
-                // Auth
+                if(!await HandshakeAsync())
                 {
-                    var opCode = await PacketHandler.ReadOpCodeAsync(_client.GetStream());
-
-                    if (opCode != OpCode.Auth)
-                    {
-                        await _logger.LogAsync(LogLevel.Error, "OpCode was not Auth during authentication.");
-                        return;
-                    }
-
-                    var lenBytes = await PacketHandler.ReadAsync<int>(_client.GetStream());
-                    var len = BitConverter.ToInt32(lenBytes);
-
-                    var handshakeBytes = await PacketHandler.ReadAsync<byte[]>(_client.GetStream(), len);
-
-                    var packet = new PacketBuilder(OpCode.Auth)
-                        .Append(handshakeBytes.Length)
-                        .Append(handshakeBytes)
-                        .Build();
-
-                    await PacketHandler.SendAsync(_client.GetStream(), packet);
+                    await _logger.LogAsync(LogLevel.Error, "Failed handshake.");
                 }
 
             }
@@ -59,6 +41,31 @@ namespace FlexConnect.Client.Network
             }
 
             await Task.Delay(-1);
+        }
+
+        private async Task<bool> HandshakeAsync()
+        {
+            var opCode = await PacketHandler.ReadOpCodeAsync(_client.GetStream());
+
+            if (opCode != OpCode.Auth)
+            {
+                await _logger.LogAsync(LogLevel.Error, "OpCode was not Auth during authentication.");
+                return false;
+            }
+
+            var lenBytes = await PacketHandler.ReadAsync<int>(_client.GetStream());
+            var len = BitConverter.ToInt32(lenBytes);
+
+            var handshakeBytes = await PacketHandler.ReadAsync<byte[]>(_client.GetStream(), len);
+
+            var packet = new PacketBuilder(OpCode.Auth)
+                .Append(handshakeBytes.Length)
+                .Append(handshakeBytes)
+                .Build();
+
+            await PacketHandler.SendAsync(_client.GetStream(), packet);
+
+            return true;
         }
     }
 }
