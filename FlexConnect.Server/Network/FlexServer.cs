@@ -62,6 +62,8 @@ namespace FlexConnect.Server.Network
             {
                 // Handshake
                 {
+                    await _logger.LogAsync(LogLevel.Info, $"Client '{tcpClient.Client.RemoteEndPoint}' connected.");
+
                     byte[] payload = Guid.NewGuid().ToByteArray();
 
                     var packet = new PacketBuilder(OpCode.Auth)
@@ -70,14 +72,28 @@ namespace FlexConnect.Server.Network
 
                     await PacketHandler.SendAsync(tcpClient.GetStream(), packet);
 
-                    var opCodeBytes = await PacketHandler.ReadAsync<int>(tcpClient.GetStream());
-                    var opCode = (OpCode)BitConverter.ToInt32(opCodeBytes, 0);
+                    var opCode = await PacketHandler.ReadOpCodeAsync(tcpClient.GetStream());
 
                     if (opCode != OpCode.Auth)
                     {
+                        await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' tried sending opcode {opCode} instead of {OpCode.Auth} before Auth was complete. Disconnecting.");
                         await DisconnectUser(tcpClient);
                         return;
                     }
+
+                    var lenBytes = await PacketHandler.ReadAsync<int>(tcpClient.GetStream());
+                    var len = BitConverter.ToInt32(lenBytes);
+                    var responsePayload = await PacketHandler.ReadAsync<byte[]>(tcpClient.GetStream(), len);
+
+                    // FIXME: We are receing the whole packet as payload
+                    if(payload != responsePayload)
+                    {
+                        await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' failed to match handshake guid. Disconnecting.");
+                        await DisconnectUser(tcpClient);
+                        return;
+                    }
+
+                    await _logger.LogAsync(LogLevel.Debug, $"Client '{tcpClient.Client.RemoteEndPoint}' passed handshake.");
                 }
             }
             catch(Exception ex)
