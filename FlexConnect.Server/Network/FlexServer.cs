@@ -1,4 +1,5 @@
-﻿using FlexConnect.Shared.Logging;
+﻿using FlexConnect.Shared.Database;
+using FlexConnect.Shared.Logging;
 using FlexConnect.Shared.MasterList;
 using FlexConnect.Shared.Network;
 
@@ -19,6 +20,8 @@ namespace FlexConnect.Server.Network
 
         private ILogger _logger;
 
+        private DatabaseHandler _db;
+
         public FlexServer(IPAddress ipAddress, int port)
         {
             _listener = new TcpListener(ipAddress, port);
@@ -27,10 +30,13 @@ namespace FlexConnect.Server.Network
             _cancelToken = _cancelTokenSource.Token;
 
             _logger = new LoggerConsole();
+
+            _db = new DatabaseHandler("root", "root", "testdb", "127.0.0.1");
         }
 
         public async Task StartAsync()
         {
+            await _db.ConnectAsync();
             await Task.Run(_listener.Start);
             await AcceptClientsAsync();
         }
@@ -86,13 +92,8 @@ namespace FlexConnect.Server.Network
             switch(opCode)
             {
                 case OpCode.ReqList:
-                    var masterList = new List<ServerInfo>();
-                    masterList.Add(new ServerInfo()
-                    {
-                        Name = "Test Server",
-                        Description = "This is a test server.",
-                        Realmlist = "logon.testserver.net"
-                    });
+                    
+                    var masterList = await _db.GetServerInfoAsync();
 
                     string serializedList = JsonSerializer.Serialize(masterList);
                     byte[] listPayload = Encoding.UTF8.GetBytes(serializedList);
