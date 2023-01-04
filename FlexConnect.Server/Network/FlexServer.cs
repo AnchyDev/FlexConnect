@@ -68,7 +68,7 @@ namespace FlexConnect.Server.Network
                 if(!await HandshakeAsync(tcpClient))
                 {
                     await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' failed handshake. Disconnecting.");
-                    await DisconnectUser(tcpClient);
+                    await DisconnectUserAsync(tcpClient);
                 }
 
                 await HandlePacketsAsync(tcpClient);
@@ -125,7 +125,7 @@ namespace FlexConnect.Server.Network
             if (opCode != OpCode.Auth)
             {
                 await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' tried sending opcode {opCode} instead of {OpCode.Auth} before Auth was complete. Disconnecting.");
-                await DisconnectUser(tcpClient);
+                await DisconnectUserAsync(tcpClient);
                 return false;
             }
 
@@ -136,7 +136,7 @@ namespace FlexConnect.Server.Network
             if (new Guid(payload).CompareTo(new Guid(responsePayload)) != 0)
             {
                 await _logger.LogAsync(LogLevel.Error, $"Client '{tcpClient.Client.RemoteEndPoint}' failed to match handshake guid. Disconnecting.");
-                await DisconnectUser(tcpClient);
+                await DisconnectUserAsync(tcpClient);
                 return false;
             }
 
@@ -144,7 +144,7 @@ namespace FlexConnect.Server.Network
             return true;
         }
 
-        private async Task DisconnectUser(TcpClient tcpClient)
+        private async Task DisconnectUserAsync(TcpClient tcpClient)
         {
             await Task.Run(tcpClient.Close);
         }
