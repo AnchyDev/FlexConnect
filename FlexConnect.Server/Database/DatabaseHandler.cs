@@ -2,7 +2,7 @@
 using MySqlConnector;
 using System.Data.SqlClient;
 
-namespace FlexConnect.Shared.Database
+namespace FlexConnect.Server.Database
 {
     public class DatabaseHandler
     {

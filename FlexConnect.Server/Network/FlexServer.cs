@@ -1,11 +1,9 @@
-﻿using FlexConnect.Shared.Database;
+﻿using FlexConnect.Server.Database;
 using FlexConnect.Shared.Logging;
-using FlexConnect.Shared.MasterList;
 using FlexConnect.Shared.Network;
 
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
 
