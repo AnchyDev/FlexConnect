@@ -20,7 +20,7 @@ namespace FlexConnect.Shared.Database
 
         public async Task<List<ServerInfo>> GetServerInfoAsync()
         {
-            using var command = new MySqlCommand("SELECT * FROM realmlists;", _mysql);
+            using var command = new MySqlCommand(SqlQueries.SelectFromRealmlist, _mysql);
             await using var reader = await command.ExecuteReaderAsync();
 
             var serverList = new List<ServerInfo>();
